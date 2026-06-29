@@ -1,0 +1,222 @@
+FRONTEND/
+
+| Technologie         | Rôle                         |
+| ------------------- | ---------------------------- |
+| **React 19**        | Framework frontend           |
+| **TypeScript**      | Typage et robustesse         |
+| **Vite**            | Build ultra rapide           |
+| **Tailwind CSS**    | Styling                      |
+| **shadcn/ui**       | Composants UI modernes       |
+| **Lucide React**    | Icônes                       |
+| **React Router**    | Navigation                   |
+| **TanStack Query**  | Gestion des données et cache |
+| **React Hook Form** | Formulaires                  |
+| **Zod**             | Validation des formulaires   |
+| **Recharts**        | KPI et graphiques            |
+| **Framer Motion**   | Animations                   |
+
+Backend (BaaS)
+Supabase
+
+Supabase te fournit :
+
+PostgreSQL
+Authentification
+Base de données
+API REST automatique
+API temps réel
+Upload de fichiers
+Gestion des utilisateurs
+Row Level Security (RLS)
+Base de données
+
+PostgreSQL (hébergée par Supabase)
+
+Tables envisagées :
+
+users
+
+departments
+
+requests
+
+messages
+
+attachments
+
+notifications
+
+message_reads
+
+statuses
+
+priorities
+Authentification
+
+Supabase Auth
+
+Pour le prototype :
+
+Email / mot de passe
+
+Plus tard, si le projet est validé :
+
+Microsoft Entra ID / Active Directory
+Stockage des fichiers
+
+Supabase Storage
+
+Support :
+
+PDF
+Excel
+Word
+Images
+ZIP
+Temps réel
+
+Supabase Realtime
+
+Utilisé pour :
+
+nouveaux messages
+nouvelles demandes
+changement de statut
+notifications
+accusés de lecture
+
+Sans WebSocket à configurer.
+
+Notifications
+
+Supabase Realtime
+
+Exemples :
+
+Nouvelle demande
+
+Nouvelle réponse
+
+Nouvelle pièce jointe
+
+Demande urgente
+
+Nouvelle affectation
+Dashboard
+
+Recharts
+
+Pour afficher :
+
+KPI Cards
+histogrammes
+donut charts
+activité quotidienne
+évolution des demandes
+Fonctionnalités du MVP
+Dashboard
+Nombre de demandes ouvertes
+Demandes urgentes
+Réponses dues aujourd'hui
+Messages non lus
+Demandes en retard
+Dernières activités
+Gestion des demandes
+
+Créer
+
+Modifier
+
+Supprimer
+
+Changer le statut
+
+Assigner
+
+Définir la priorité
+
+Ajouter une échéance
+
+Chat
+
+Conversation liée à une demande
+
+Messages
+
+Réponses
+
+Pièces jointes
+
+Historique
+
+Lecture
+
+Chaque message possède :
+
+Vu
+
+Vu par
+
+Date de lecture
+
+Heure de lecture
+Recherche
+
+Recherche globale sur :
+
+titre
+description
+auteur
+message
+fichier
+Historique
+
+Toutes les actions sont enregistrées.
+
+Exemple :
+
+Ahmed
+
+a changé le statut
+
+En cours
+
+14:22
+Gestion des fichiers
+
+Upload
+
+Prévisualisation
+
+Téléchargement
+
+Historique
+
+UI
+
+Je partirais sur un design inspiré de :
+
+Linear → sobriété et efficacité
+Slack → communication
+Notion → lisibilité
+Jira → gestion des demandes
+
+L'objectif est une interface moderne, simple et très professionnelle.
+
+Architecture
+React + TypeScript
+        │
+TanStack Query
+        │
+Supabase JS SDK
+        │
+──────────────────────────────
+│ PostgreSQL
+│ Auth
+│ Storage
+│ Realtime
+──────────────────────────────
+MESSAGE A ENVOYER:
+
+"On centralise les demandes, on réduit les échanges inutiles, on améliore la traçabilité et on mesure la performance de l'équipe grâce à des KPI en temps réel."
+

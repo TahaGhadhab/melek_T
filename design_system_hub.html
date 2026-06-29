@@ -1,0 +1,507 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-sans); }
+
+.ds-section { margin-bottom: 2.5rem; }
+.ds-label { font-size: 11px; font-weight: 500; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.75rem; }
+.ds-title { font-size: 20px; font-weight: 500; color: var(--text-primary); margin-bottom: 0.25rem; }
+.ds-sub { font-size: 13px; color: var(--text-secondary); margin-bottom: 1.5rem; }
+
+/* Color swatches */
+.swatch-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.swatch { width: 48px; height: 48px; border-radius: 8px; position: relative; cursor: default; }
+.swatch-label { font-size: 10px; color: var(--text-muted); margin-top: 4px; text-align: center; }
+
+/* Token table */
+.token-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.token-card { background: var(--surface-1); border: 0.5px solid var(--border); border-radius: 8px; padding: 10px 12px; display: flex; align-items: center; gap: 10px; }
+.token-dot { width: 28px; height: 28px; border-radius: 6px; flex-shrink: 0; border: 0.5px solid var(--border); }
+.token-info { min-width: 0; }
+.token-name { font-size: 12px; font-weight: 500; color: var(--text-primary); font-family: var(--font-mono); }
+.token-desc { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+
+/* Typography scale */
+.type-row { padding: 10px 0; border-bottom: 0.5px solid var(--border); display: flex; align-items: baseline; gap: 16px; }
+.type-meta { font-size: 11px; color: var(--text-muted); font-family: var(--font-mono); min-width: 160px; flex-shrink: 0; }
+
+/* Spacing */
+.spacing-row { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+.spacing-bar { background: var(--bg-accent); border-radius: 3px; height: 20px; flex-shrink: 0; }
+.spacing-meta { font-size: 12px; color: var(--text-secondary); font-family: var(--font-mono); }
+.spacing-name { font-size: 12px; font-weight: 500; color: var(--text-primary); min-width: 80px; font-family: var(--font-mono); }
+
+/* Component preview */
+.comp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.comp-card { background: var(--surface-1); border: 0.5px solid var(--border); border-radius: 8px; padding: 12px; }
+.comp-card-title { font-size: 11px; font-weight: 500; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
+
+/* Request card mini */
+.req-card { background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; }
+.req-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+.req-title { font-size: 13px; font-weight: 500; color: var(--text-primary); }
+.req-meta { display: flex; align-items: center; gap: 6px; }
+.badge { font-size: 10px; font-weight: 500; padding: 2px 7px; border-radius: 4px; }
+.badge-urgent { background: #FCEBEB; color: #791F1F; }
+.badge-high { background: #FAEEDA; color: #633806; }
+.badge-medium { background: #E6F1FB; color: #0C447C; }
+.badge-low { background: #EAF3DE; color: #27500A; }
+.status-new { background: #EEEDFE; color: #3C3489; }
+.status-progress { background: #E1F5EE; color: #085041; }
+.status-waiting { background: #FAEEDA; color: #633806; }
+.status-blocked { background: #FCEBEB; color: #791F1F; }
+.status-resolved { background: #EAF3DE; color: #27500A; }
+.avatar { width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 500; flex-shrink: 0; }
+.av-blue { background: #B5D4F4; color: #0C447C; }
+.av-teal { background: #9FE1CB; color: #085041; }
+.av-amber { background: #FAC775; color: #633806; }
+.av-coral { background: #F5C4B3; color: #712B13; }
+.req-footer { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
+.req-dept { font-size: 10px; color: var(--text-muted); }
+.req-date { font-size: 10px; color: var(--text-muted); margin-left: auto; }
+
+/* KPI card mini */
+.kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.kpi-card { background: var(--surface-2); border: 0.5px solid var(--border); border-radius: 8px; padding: 10px; }
+.kpi-val { font-size: 22px; font-weight: 500; color: var(--text-primary); line-height: 1; }
+.kpi-label { font-size: 10px; color: var(--text-muted); margin-top: 4px; }
+.kpi-delta { font-size: 10px; margin-top: 2px; }
+.delta-up { color: #0F6E56; }
+.delta-down { color: #A32D2D; }
+
+/* Message bubble */
+.msg-row { display: flex; gap: 8px; margin-bottom: 10px; }
+.msg-bubble { background: var(--surface-1); border: 0.5px solid var(--border); border-radius: 8px; padding: 8px 10px; flex: 1; }
+.msg-bubble.mine { background: var(--bg-accent); border-color: var(--border-accent); }
+.msg-author { font-size: 10px; font-weight: 500; color: var(--text-secondary); margin-bottom: 3px; }
+.msg-text { font-size: 12px; color: var(--text-primary); line-height: 1.5; }
+.msg-time { font-size: 9px; color: var(--text-muted); margin-top: 4px; display: flex; align-items: center; gap: 4px; justify-content: flex-end; }
+.seen-dot { width: 12px; height: 6px; border-radius: 3px; background: var(--fill-accent); opacity: 0.6; }
+
+/* Sidebar mini */
+.sidebar-mini { background: var(--surface-1); border: 0.5px solid var(--border); border-radius: 8px; overflow: hidden; }
+.sidebar-logo { padding: 12px; border-bottom: 0.5px solid var(--border); font-size: 13px; font-weight: 500; color: var(--text-primary); display: flex; align-items: center; gap: 8px; }
+.sidebar-logo-dot { width: 20px; height: 20px; background: var(--fill-accent); border-radius: 5px; display: flex; align-items: center; justify-content: center; }
+.nav-item { padding: 7px 12px; font-size: 12px; color: var(--text-secondary); display: flex; align-items: center; gap: 8px; cursor: pointer; }
+.nav-item.active { background: var(--bg-accent); color: var(--text-accent); border-left: 2px solid var(--fill-accent); }
+.nav-item i { font-size: 14px; }
+.nav-badge { margin-left: auto; background: #E24B4A; color: #fff; font-size: 9px; font-weight: 500; padding: 1px 5px; border-radius: 3px; }
+
+/* Icon grid */
+.icon-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px; }
+.icon-item { background: var(--surface-1); border: 0.5px solid var(--border); border-radius: 6px; padding: 10px 6px; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.icon-item i { font-size: 18px; color: var(--text-secondary); }
+.icon-item span { font-size: 9px; color: var(--text-muted); text-align: center; line-height: 1.2; }
+
+/* Motion tokens */
+.motion-row { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+.motion-bar { height: 4px; border-radius: 2px; background: var(--fill-accent); }
+.motion-label { font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); min-width: 80px; }
+.motion-ms { font-size: 11px; color: var(--text-secondary); min-width: 40px; }
+.motion-use { font-size: 11px; color: var(--text-muted); }
+
+/* Divider */
+.divider { border: none; border-top: 0.5px solid var(--border); margin: 2rem 0; }
+
+/* Full widget */
+.ds-wrap { padding: 1.5rem 0; }
+</style>
+
+<h2 class="sr-only">Système de design — Operational Communication Hub</h2>
+<div class="ds-wrap">
+
+  <!-- Header -->
+  <div class="ds-section">
+    <div class="ds-label">Design System</div>
+    <div class="ds-title">Operational Communication Hub</div>
+    <div class="ds-sub">Référentiel visuel complet — couleurs, typographie, espacements, composants</div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- Couleurs principales -->
+  <div class="ds-section">
+    <div class="ds-label">Palette principale</div>
+    <div style="display:flex;gap:24px;flex-wrap:wrap;margin-bottom:1.5rem;">
+      <!-- Blue (accent principal) -->
+      <div>
+        <div style="font-size:11px;font-weight:500;color:var(--text-secondary);margin-bottom:6px;">Blue — accent principal</div>
+        <div class="swatch-row">
+          <div><div class="swatch" style="background:#E6F1FB;border:0.5px solid var(--border)"></div><div class="swatch-label">50</div></div>
+          <div><div class="swatch" style="background:#B5D4F4"></div><div class="swatch-label">100</div></div>
+          <div><div class="swatch" style="background:#85B7EB"></div><div class="swatch-label">200</div></div>
+          <div><div class="swatch" style="background:#378ADD"></div><div class="swatch-label">400</div></div>
+          <div><div class="swatch" style="background:#185FA5"></div><div class="swatch-label">600</div></div>
+          <div><div class="swatch" style="background:#0C447C"></div><div class="swatch-label">800</div></div>
+          <div><div class="swatch" style="background:#042C53"></div><div class="swatch-label">900</div></div>
+        </div>
+      </div>
+      <!-- Red (urgence) -->
+      <div>
+        <div style="font-size:11px;font-weight:500;color:var(--text-secondary);margin-bottom:6px;">Red — urgence / danger</div>
+        <div class="swatch-row">
+          <div><div class="swatch" style="background:#FCEBEB;border:0.5px solid var(--border)"></div><div class="swatch-label">50</div></div>
+          <div><div class="swatch" style="background:#F7C1C1"></div><div class="swatch-label">100</div></div>
+          <div><div class="swatch" style="background:#F09595"></div><div class="swatch-label">200</div></div>
+          <div><div class="swatch" style="background:#E24B4A"></div><div class="swatch-label">400</div></div>
+          <div><div class="swatch" style="background:#A32D2D"></div><div class="swatch-label">600</div></div>
+          <div><div class="swatch" style="background:#791F1F"></div><div class="swatch-label">800</div></div>
+          <div><div class="swatch" style="background:#501313"></div><div class="swatch-label">900</div></div>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;gap:24px;flex-wrap:wrap;">
+      <!-- Amber (warning) -->
+      <div>
+        <div style="font-size:11px;font-weight:500;color:var(--text-secondary);margin-bottom:6px;">Amber — avertissement / high</div>
+        <div class="swatch-row">
+          <div><div class="swatch" style="background:#FAEEDA;border:0.5px solid var(--border)"></div><div class="swatch-label">50</div></div>
+          <div><div class="swatch" style="background:#FAC775"></div><div class="swatch-label">100</div></div>
+          <div><div class="swatch" style="background:#EF9F27"></div><div class="swatch-label">200</div></div>
+          <div><div class="swatch" style="background:#BA7517"></div><div class="swatch-label">400</div></div>
+          <div><div class="swatch" style="background:#854F0B"></div><div class="swatch-label">600</div></div>
+          <div><div class="swatch" style="background:#633806"></div><div class="swatch-label">800</div></div>
+          <div><div class="swatch" style="background:#412402"></div><div class="swatch-label">900</div></div>
+        </div>
+      </div>
+      <!-- Green (succès / résolu) -->
+      <div>
+        <div style="font-size:11px;font-weight:500;color:var(--text-secondary);margin-bottom:6px;">Green — succès / résolu</div>
+        <div class="swatch-row">
+          <div><div class="swatch" style="background:#EAF3DE;border:0.5px solid var(--border)"></div><div class="swatch-label">50</div></div>
+          <div><div class="swatch" style="background:#C0DD97"></div><div class="swatch-label">100</div></div>
+          <div><div class="swatch" style="background:#97C459"></div><div class="swatch-label">200</div></div>
+          <div><div class="swatch" style="background:#639922"></div><div class="swatch-label">400</div></div>
+          <div><div class="swatch" style="background:#3B6D11"></div><div class="swatch-label">600</div></div>
+          <div><div class="swatch" style="background:#27500A"></div><div class="swatch-label">800</div></div>
+          <div><div class="swatch" style="background:#173404"></div><div class="swatch-label">900</div></div>
+        </div>
+      </div>
+      <!-- Gray -->
+      <div>
+        <div style="font-size:11px;font-weight:500;color:var(--text-secondary);margin-bottom:6px;">Gray — neutre / structure</div>
+        <div class="swatch-row">
+          <div><div class="swatch" style="background:#F1EFE8;border:0.5px solid var(--border)"></div><div class="swatch-label">50</div></div>
+          <div><div class="swatch" style="background:#D3D1C7"></div><div class="swatch-label">100</div></div>
+          <div><div class="swatch" style="background:#B4B2A9"></div><div class="swatch-label">200</div></div>
+          <div><div class="swatch" style="background:#888780"></div><div class="swatch-label">400</div></div>
+          <div><div class="swatch" style="background:#5F5E5A"></div><div class="swatch-label">600</div></div>
+          <div><div class="swatch" style="background:#444441"></div><div class="swatch-label">800</div></div>
+          <div><div class="swatch" style="background:#2C2C2A"></div><div class="swatch-label">900</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- Tokens sémantiques -->
+  <div class="ds-section">
+    <div class="ds-label">Tokens sémantiques</div>
+    <div class="token-grid">
+      <div class="token-card">
+        <div class="token-dot" style="background:var(--text-primary)"></div>
+        <div class="token-info"><div class="token-name">--text-primary</div><div class="token-desc">Titres, valeurs, contenus</div></div>
+      </div>
+      <div class="token-card">
+        <div class="token-dot" style="background:var(--text-secondary)"></div>
+        <div class="token-info"><div class="token-name">--text-secondary</div><div class="token-desc">Métadonnées, labels</div></div>
+      </div>
+      <div class="token-card">
+        <div class="token-dot" style="background:var(--text-muted)"></div>
+        <div class="token-info"><div class="token-name">--text-muted</div><div class="token-desc">Placeholders, timestamps</div></div>
+      </div>
+      <div class="token-card">
+        <div class="token-dot" style="background:var(--text-accent)"></div>
+        <div class="token-info"><div class="token-name">--text-accent</div><div class="token-desc">Liens, actions actives</div></div>
+      </div>
+      <div class="token-card">
+        <div class="token-dot" style="background:var(--surface-0);border:0.5px solid var(--border)"></div>
+        <div class="token-info"><div class="token-name">--surface-0</div><div class="token-desc">Canvas principal (bg page)</div></div>
+      </div>
+      <div class="token-card">
+        <div class="token-dot" style="background:var(--surface-1);border:0.5px solid var(--border)"></div>
+        <div class="token-info"><div class="token-name">--surface-1</div><div class="token-desc">Cartes, sidebar, panneaux</div></div>
+      </div>
+      <div class="token-card">
+        <div class="token-dot" style="background:var(--surface-2);border:0.5px solid var(--border)"></div>
+        <div class="token-info"><div class="token-name">--surface-2</div><div class="token-desc">Modales, popovers</div></div>
+      </div>
+      <div class="token-card">
+        <div class="token-dot" style="background:var(--bg-accent);border:0.5px solid var(--border-accent)"></div>
+        <div class="token-info"><div class="token-name">--bg-accent</div><div class="token-desc">Nav active, sélection</div></div>
+      </div>
+      <div class="token-card">
+        <div class="token-dot" style="background:var(--bg-danger)"></div>
+        <div class="token-info"><div class="token-name">--bg-danger</div><div class="token-desc">Alertes urgentes, bloqué</div></div>
+      </div>
+      <div class="token-card">
+        <div class="token-dot" style="background:var(--bg-success)"></div>
+        <div class="token-info"><div class="token-name">--bg-success</div><div class="token-desc">Résolu, complété</div></div>
+      </div>
+      <div class="token-card">
+        <div class="token-dot" style="background:var(--bg-warning)"></div>
+        <div class="token-info"><div class="token-name">--bg-warning</div><div class="token-desc">High priority, en attente</div></div>
+      </div>
+      <div class="token-card">
+        <div class="token-dot" style="background:var(--border);width:28px;height:28px;border:0.5px solid var(--border-strong)"></div>
+        <div class="token-info"><div class="token-name">--border</div><div class="token-desc">Séparateurs, contours</div></div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- Typographie -->
+  <div class="ds-section">
+    <div class="ds-label">Échelle typographique</div>
+    <div class="type-row">
+      <div class="type-meta">heading / 20px / 500</div>
+      <span style="font-size:20px;font-weight:500;color:var(--text-primary)">Demande IT — Accès VPN</span>
+    </div>
+    <div class="type-row">
+      <div class="type-meta">title / 16px / 500</div>
+      <span style="font-size:16px;font-weight:500;color:var(--text-primary)">Requête en cours — Infrastructure</span>
+    </div>
+    <div class="type-row">
+      <div class="type-meta">body / 14px / 400</div>
+      <span style="font-size:14px;font-weight:400;color:var(--text-primary)">Description de la demande, contexte, informations complémentaires</span>
+    </div>
+    <div class="type-row">
+      <div class="type-meta">caption / 12px / 400</div>
+      <span style="font-size:12px;font-weight:400;color:var(--text-secondary)">Assigné à · Jean Martin · Département IT · 28 juin 2026</span>
+    </div>
+    <div class="type-row">
+      <div class="type-meta">footnote / 11px / 400</div>
+      <span style="font-size:11px;font-weight:400;color:var(--text-muted)">Lu le 28 juin à 09:42 · Modifié il y a 3 min</span>
+    </div>
+    <div class="type-row" style="border:none">
+      <div class="type-meta">mono / 12px / 400</div>
+      <span style="font-size:12px;font-weight:400;color:var(--text-secondary);font-family:var(--font-mono)">REQ-2026-0342 · --border-accent · rgba(0,0,0,0.06)</span>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- Espacements -->
+  <div class="ds-section">
+    <div class="ds-label">Espacements</div>
+    <div class="spacing-row"><div class="spacing-name">--gap-xs</div><div class="spacing-bar" style="width:4px"></div><div class="spacing-meta">4px</div><div class="spacing-use" style="font-size:11px;color:var(--text-muted)">Icône + label, badge interne</div></div>
+    <div class="spacing-row"><div class="spacing-name">--gap-sm</div><div class="spacing-bar" style="width:8px"></div><div class="spacing-meta">8px</div><div class="spacing-use" style="font-size:11px;color:var(--text-muted)">Avatar + nom, boutons inline</div></div>
+    <div class="spacing-row"><div class="spacing-name">--gap-md</div><div class="spacing-bar" style="width:12px"></div><div class="spacing-meta">12px</div><div class="spacing-use" style="font-size:11px;color:var(--text-muted)">Gap grilles de cartes KPI</div></div>
+    <div class="spacing-row"><div class="spacing-name">--gap-lg</div><div class="spacing-bar" style="width:16px"></div><div class="spacing-meta">16px</div><div class="spacing-use" style="font-size:11px;color:var(--text-muted)">Gap colonnes, sections internes</div></div>
+    <div class="spacing-row"><div class="spacing-name">--gap-xl</div><div class="spacing-bar" style="width:24px"></div><div class="spacing-meta">24px</div><div class="spacing-use" style="font-size:11px;color:var(--text-muted)">Padding cartes, sections</div></div>
+    <div class="spacing-row"><div class="spacing-name">--pad-xl</div><div class="spacing-bar" style="width:32px"></div><div class="spacing-meta">32px</div><div class="spacing-use" style="font-size:11px;color:var(--text-muted)">Padding page, sidebar</div></div>
+    <div style="margin-top:10px;font-size:11px;color:var(--text-muted)">Border radius : <span style="font-family:var(--font-mono)">--radius = 8px</span> — cartes : <span style="font-family:var(--font-mono)">12px</span> — sidebar active : <span style="font-family:var(--font-mono)">6px</span> — avatar : <span style="font-family:var(--font-mono)">50%</span></div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- Badges & Statuts -->
+  <div class="ds-section">
+    <div class="ds-label">Badges — Priorités &amp; Statuts</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center;">
+      <div style="font-size:11px;color:var(--text-muted);min-width:60px">Priorité</div>
+      <span class="badge badge-urgent">Urgent</span>
+      <span class="badge badge-high">High</span>
+      <span class="badge badge-medium">Medium</span>
+      <span class="badge badge-low">Low</span>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+      <div style="font-size:11px;color:var(--text-muted);min-width:60px">Statut</div>
+      <span class="badge status-new">New</span>
+      <span class="badge status-progress">In Progress</span>
+      <span class="badge status-waiting">Waiting</span>
+      <span class="badge status-blocked">Blocked</span>
+      <span class="badge status-resolved">Resolved</span>
+      <span class="badge" style="background:#D3D1C7;color:#2C2C2A">Closed</span>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- Composants -->
+  <div class="ds-section">
+    <div class="ds-label">Composants — Aperçu</div>
+    <div class="comp-grid">
+
+      <!-- KPI cards -->
+      <div class="comp-card">
+        <div class="comp-card-title">KPI Cards — Dashboard</div>
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-val">24</div>
+            <div class="kpi-label">Open</div>
+            <div class="kpi-delta delta-up">↑ 3</div>
+          </div>
+          <div class="kpi-card" style="border-color:#F09595">
+            <div class="kpi-val" style="color:#A32D2D">7</div>
+            <div class="kpi-label">Urgent</div>
+            <div class="kpi-delta delta-up">↑ 2</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-val">4</div>
+            <div class="kpi-label">Due today</div>
+            <div class="kpi-delta" style="color:var(--text-muted)">—</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-val" style="color:#0F6E56">12</div>
+            <div class="kpi-label">Resolved</div>
+            <div class="kpi-delta delta-down">↓ 1</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="comp-card">
+        <div class="comp-card-title">Sidebar navigation</div>
+        <div class="sidebar-mini">
+          <div class="sidebar-logo">
+            <div class="sidebar-logo-dot"><span style="font-size:10px;color:#fff;font-weight:700">O</span></div>
+            OpsHub
+          </div>
+          <div class="nav-item active"><i class="ti ti-layout-dashboard"></i> Dashboard</div>
+          <div class="nav-item"><i class="ti ti-ticket"></i> Requests <span class="nav-badge">5</span></div>
+          <div class="nav-item"><i class="ti ti-bell"></i> Notifications <span class="nav-badge">3</span></div>
+          <div class="nav-item"><i class="ti ti-search"></i> Search</div>
+          <div class="nav-item"><i class="ti ti-users"></i> Team</div>
+          <div class="nav-item"><i class="ti ti-settings"></i> Settings</div>
+        </div>
+      </div>
+
+      <!-- Request card -->
+      <div class="comp-card">
+        <div class="comp-card-title">Request Cards</div>
+        <div class="req-card">
+          <div class="req-header">
+            <div class="req-title">Accès VPN site Lyon</div>
+            <div class="req-meta">
+              <span class="badge badge-urgent">Urgent</span>
+              <span class="badge status-progress">In Progress</span>
+            </div>
+          </div>
+          <div style="font-size:11px;color:var(--text-muted);margin-bottom:6px">Besoin d'un accès VPN pour l'équipe terrain...</div>
+          <div class="req-footer">
+            <div class="avatar av-blue">JM</div>
+            <div class="req-dept">Infrastructure</div>
+            <div class="req-date">Échéance : 29 juin</div>
+          </div>
+        </div>
+        <div class="req-card">
+          <div class="req-header">
+            <div class="req-title">Renouvellement licences Office</div>
+            <div class="req-meta">
+              <span class="badge badge-medium">Medium</span>
+              <span class="badge status-waiting">Waiting</span>
+            </div>
+          </div>
+          <div style="font-size:11px;color:var(--text-muted);margin-bottom:6px">En attente de validation budget direction...</div>
+          <div class="req-footer">
+            <div class="avatar av-teal">SC</div>
+            <div class="req-dept">Systèmes</div>
+            <div class="req-date">Échéance : 5 juil.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Messages -->
+      <div class="comp-card">
+        <div class="comp-card-title">Discussion thread</div>
+        <div class="msg-row">
+          <div class="avatar av-blue" style="margin-top:2px">JM</div>
+          <div class="msg-bubble">
+            <div class="msg-author">Jean Martin</div>
+            <div class="msg-text">J'ai créé les accès VPN pour l'équipe. Merci de tester la connexion et confirmer.</div>
+            <div class="msg-time">09:42 <div class="seen-dot"></div></div>
+          </div>
+        </div>
+        <div class="msg-row" style="flex-direction:row-reverse">
+          <div class="avatar av-amber" style="margin-top:2px">PL</div>
+          <div class="msg-bubble mine">
+            <div class="msg-author" style="color:var(--text-accent)">Paul Leroy</div>
+            <div class="msg-text">Testé et validé de mon côté, connexion stable. Merci !</div>
+            <div class="msg-time">09:51</div>
+          </div>
+        </div>
+        <div style="padding:8px 0 0;display:flex;gap:8px">
+          <div style="flex:1;background:var(--surface-1);border:0.5px solid var(--border);border-radius:6px;padding:7px 10px;font-size:12px;color:var(--text-muted)">Écrire un message...</div>
+          <button style="background:var(--fill-accent);color:#fff;border:none;border-radius:6px;padding:7px 12px;font-size:12px;cursor:pointer"><i class="ti ti-send" style="font-size:14px"></i></button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- Icônes -->
+  <div class="ds-section">
+    <div class="ds-label">Iconographie — Lucide / Tabler (outline)</div>
+    <div class="icon-grid">
+      <div class="icon-item"><i class="ti ti-layout-dashboard" aria-hidden="true"></i><span>Dashboard</span></div>
+      <div class="icon-item"><i class="ti ti-ticket" aria-hidden="true"></i><span>Request</span></div>
+      <div class="icon-item"><i class="ti ti-bell" aria-hidden="true"></i><span>Notif.</span></div>
+      <div class="icon-item"><i class="ti ti-message" aria-hidden="true"></i><span>Message</span></div>
+      <div class="icon-item"><i class="ti ti-paperclip" aria-hidden="true"></i><span>Pièce jointe</span></div>
+      <div class="icon-item"><i class="ti ti-user" aria-hidden="true"></i><span>Profil</span></div>
+      <div class="icon-item"><i class="ti ti-search" aria-hidden="true"></i><span>Search</span></div>
+      <div class="icon-item"><i class="ti ti-filter" aria-hidden="true"></i><span>Filtre</span></div>
+      <div class="icon-item"><i class="ti ti-clock" aria-hidden="true"></i><span>Délai</span></div>
+      <div class="icon-item"><i class="ti ti-alert-triangle" aria-hidden="true"></i><span>Urgent</span></div>
+      <div class="icon-item"><i class="ti ti-check" aria-hidden="true"></i><span>Résolu</span></div>
+      <div class="icon-item"><i class="ti ti-x" aria-hidden="true"></i><span>Fermé</span></div>
+      <div class="icon-item"><i class="ti ti-edit" aria-hidden="true"></i><span>Modifier</span></div>
+      <div class="icon-item"><i class="ti ti-trash" aria-hidden="true"></i><span>Supprimer</span></div>
+      <div class="icon-item"><i class="ti ti-plus" aria-hidden="true"></i><span>Créer</span></div>
+      <div class="icon-item"><i class="ti ti-chart-bar" aria-hidden="true"></i><span>KPI</span></div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- Motion -->
+  <div class="ds-section">
+    <div class="ds-label">Tokens de mouvement</div>
+    <div class="motion-row"><div class="motion-label">150ms fast</div><div class="motion-bar" style="width:60px"></div><div class="motion-use" style="font-size:11px;color:var(--text-muted)">Hover, badge, tooltip</div></div>
+    <div class="motion-row"><div class="motion-label">200ms snap</div><div class="motion-bar" style="width:80px"></div><div class="motion-use" style="font-size:11px;color:var(--text-muted)">Bouton press, toggle status</div></div>
+    <div class="motion-row"><div class="motion-label">250ms base</div><div class="motion-bar" style="width:100px"></div><div class="motion-use" style="font-size:11px;color:var(--text-muted)">Sidebar open, card appear</div></div>
+    <div class="motion-row"><div class="motion-label">350ms slow</div><div class="motion-bar" style="width:140px"></div><div class="motion-use" style="font-size:11px;color:var(--text-muted)">Modal, panneau détail, toast</div></div>
+    <div style="margin-top:10px;font-size:11px;color:var(--text-muted)">Easing par défaut : <span style="font-family:var(--font-mono)">cubic-bezier(0.16, 1, 0.3, 1)</span> (ease-out-expo) — Overshoot pour modales : <span style="font-family:var(--font-mono)">cubic-bezier(0.34, 1.56, 0.64, 1)</span></div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- Layout -->
+  <div class="ds-section">
+    <div class="ds-label">Structure de layout</div>
+    <div style="background:var(--surface-1);border:0.5px solid var(--border);border-radius:12px;overflow:hidden;font-size:11px;">
+      <div style="display:flex;height:160px;">
+        <div style="width:200px;background:var(--surface-1);border-right:0.5px solid var(--border);padding:12px;flex-shrink:0;">
+          <div style="font-weight:500;color:var(--text-primary);margin-bottom:8px">Sidebar</div>
+          <div style="color:var(--text-muted)">240px fixe</div>
+          <div style="color:var(--text-muted);margin-top:4px">Nav + logo</div>
+        </div>
+        <div style="flex:1;display:flex;flex-direction:column;">
+          <div style="padding:10px 14px;border-bottom:0.5px solid var(--border);background:var(--surface-2);display:flex;align-items:center;gap:8px;">
+            <span style="font-weight:500;color:var(--text-primary)">Topbar</span>
+            <span style="color:var(--text-muted);margin-left:auto">Search · Notifs · Avatar</span>
+          </div>
+          <div style="flex:1;display:flex;">
+            <div style="flex:1;padding:14px;color:var(--text-muted);">
+              <div style="font-weight:500;color:var(--text-secondary);margin-bottom:4px">Liste (flex: 1)</div>
+              <div>Filtres · Sort · Cards</div>
+            </div>
+            <div style="width:420px;border-left:0.5px solid var(--border);padding:14px;color:var(--text-muted);flex-shrink:0">
+              <div style="font-weight:500;color:var(--text-secondary);margin-bottom:4px">Détail (420px)</div>
+              <div>Request + Discussion</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:8px;font-size:11px;color:var(--text-muted)">
+      Sidebar : 240px · Topbar : 52px · Détail panel : 420px fixe · Contenu principal : flex-1 · Gap général : 0 (layout par borders)
+    </div>
+  </div>
+
+</div>

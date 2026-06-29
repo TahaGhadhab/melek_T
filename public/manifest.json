@@ -1,0 +1,51 @@
+{
+  "name": "OpsHub — Operational Communication Hub",
+  "short_name": "OpsHub",
+  "description": "Operational communication and request management platform",
+  "start_url": "/",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
+  "orientation": "any",
+  "background_color": "#F9F8F5",
+  "theme_color": "#378ADD",
+  "categories": ["business", "productivity", "communication"],
+  "lang": "en",
+  "scope": "/",
+  "id": "/",
+  "icons": [
+    {
+      "src": "/icons/icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "monochrome"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "New Request",
+      "short_name": "New",
+      "description": "Create a new support request",
+      "url": "/requests?new=true"
+    },
+    {
+      "name": "Notifications",
+      "short_name": "Notifs",
+      "description": "View your notifications",
+      "url": "/notifications"
+    }
+  ],
+  "related_applications": []
+}
